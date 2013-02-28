@@ -1,0 +1,5 @@
+_trial_temp/
+*.egg-info/
+*.py[co]
+build/
+dist/
