@@ -1,6 +1,6 @@
 all: test
 	
-publish:
+publish: test
 	python setup.py sdist upload -r pypi
 
 env:

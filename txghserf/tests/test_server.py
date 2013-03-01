@@ -61,7 +61,7 @@ class TestServer(TestCase):
         """
         result = hook(self.request, 'hook_name')
 
-        self.assertTrue(result.startswith('Error:002: '))
+        self.assertTrue(result.startswith('Error:004: '))
 
     def test_hook_bad_content_type(self):
         """
@@ -87,7 +87,7 @@ class TestServer(TestCase):
 
         self.assertTrue(result.startswith('Error:003: '))
 
-    def test_hook_all_good_generic_event(self):
+    def test_hook_all_good_application_json(self):
         """
         Generic event having json content, are parsed.
         """
@@ -109,9 +109,9 @@ class TestServer(TestCase):
         self.assertEqual('issue_comment', self.called_event.name)
         self.assertEqual({'key': 'value'}, self.called_event.content)
 
-    def test_hook_all_good_push_event(self):
+    def test_hook_all_good_form_urlencoded(self):
         """
-        Push events are parsed from x-www-form-urlencoded.
+        x-www-form-urlencoded are parsed based on "payload" argument.
         """
         self.called_event = None
 

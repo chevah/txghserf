@@ -94,10 +94,15 @@ def hook(request, hook_name):
             ' "%(ip)s".' % {'name': hook_name, 'ip': request.getClientIP()})
         return "Error:001: Where are you comming from?"
 
+    event_name = request.getHeader('X-Github-Event')
+    if not event_name:
+        log.msg('No event name for "%(name)s". %(details)s' % {
+                'name': hook_name, 'details': request.headers.items()})
+        return "Error:004: What event is this?"
+
     content = None
-    event_name = None
     try:
-        event_name, content = parse_request(request)
+        content = parse_request(request, event_name)
     except ServerException, error:
         log.msg('Failed to get json for hook "%(name)s". %(details)s' % {
                 'name': hook_name, 'details': error.message})
@@ -105,11 +110,14 @@ def hook(request, hook_name):
     except:
         import traceback
         log.msg(
-            'Failed to process "%(event_name)s":\n%(content)s\n%(details)s' % {
-            'event_name': event_name,
-            'content': content,
-            'details': traceback.format_exc(),
-            })
+            'Failed to process "%(hook_name)s" "%(event_name)s":\n'
+            '%(content)s\n'
+            '%(details)s' % {
+                'hook_name': hook_name,
+                'event_name': event_name,
+                'content': content,
+                'details': traceback.format_exc(),
+                })
         return "Error:003: Internal error"
 
     event = Event(
@@ -125,7 +133,7 @@ def hook(request, hook_name):
         log.msg("Received new event for %s" % event)
 
 
-def parse_request(request):
+def parse_request(request, event_name):
     """
     Return the event name nad JSON from request.
     """
@@ -135,18 +143,16 @@ def parse_request(request):
         'application/json',
         ]
 
-    event_name = request.getHeader('X-Github-Event')
-    if not event_name:
-        raise ServerException('Unknown event.')
-
     content_type = request.getHeader('Content-Type')
     if not content_type or content_type not in SUPPORTED_CONTENT_TYPES:
         raise ServerException('Unsuported content type.')
 
-    if event_name == 'push':
+    if content_type == 'application/json':
+        json_serialization = request.content.getvalue()
+    elif content_type == 'application/x-www-form-urlencoded':
         json_serialization = request.args['payload'][0]
     else:
-        json_serialization = request.content.read()
+        raise AssertionError('How did we get here?')
 
     json_dict = json.loads(json_serialization)
-    return (event_name, json_dict)
+    return json_dict

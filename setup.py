@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-VERSION = '0.1.7'
+VERSION = '0.1.9'
 
 distribution = setup(
     name="txghserf",
