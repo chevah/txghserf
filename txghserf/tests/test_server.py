@@ -1,5 +1,18 @@
 """
 Tests for requests dispatcher.
+
+Functional test using curl:
+
+ curl --data '{"param1": "test"}' \
+    -H "X-Github-Event: issue_comment" \
+    -H "Content-type: application/json"\
+    http://localhost:8080/hook/test
+
+curl --data 'payload=%7B%22key%22%3A%22value%22%7D' \
+    -H "X-Github-Event: push" \
+    -H "Content-type: application/x-www-form-urlencoded" \
+     http://localhost:8080/hook/something
+
 """
 from StringIO import StringIO
 
@@ -50,20 +63,33 @@ class TestServer(TestCase):
 
         self.assertTrue(result.startswith('Error:002: '))
 
+    def test_hook_bad_content_type(self):
+        """
+        An error is raised when the request has an unsuperted content type.
+        """
+        self.request.headers['x-github-event'] = 'push'
+        self.request.headers['content-type'] = 'unknown'
+
+        result = hook(self.request, 'hook_name')
+
+        self.assertTrue(result.startswith('Error:002: '))
+
     def test_hook_bad_content(self):
         """
         An error is raised on parser failures.
         """
         self.request.headers['x-github-event'] = 'push'
+        self.request.headers['content-type'] = (
+            'application/x-www-form-urlencoded')
         self.request.content = StringIO('bad-json-formtat')
 
         result = hook(self.request, 'hook_name')
 
         self.assertTrue(result.startswith('Error:003: '))
 
-    def test_hook_all_good(self):
+    def test_hook_all_good_generic_event(self):
         """
-        If hook was succesfully parsed, the event is passed to the callback.
+        Generic event having json content, are parsed.
         """
         self.called_event = None
 
@@ -71,8 +97,31 @@ class TestServer(TestCase):
             self.called_event = event
 
         CONFIGURATION['callback'] = callbacks
-        self.request.headers['x-github-event'] = 'push'
+        self.request.headers['x-github-event'] = 'issue_comment'
+        self.request.headers['content-type'] = 'application/json'
         self.request.content = StringIO('{"key": "value"}')
+
+        result = hook(self.request, 'hook_name')
+
+        self.assertIsNone(result)
+        self.assertIsNotNone(self.called_event)
+        self.assertEqual('hook_name', self.called_event.hook)
+        self.assertEqual('issue_comment', self.called_event.name)
+        self.assertEqual({'key': 'value'}, self.called_event.content)
+
+    def test_hook_all_good_push_event(self):
+        """
+        Push events are parsed from x-www-form-urlencoded.
+        """
+        self.called_event = None
+
+        def callbacks(event):
+            self.called_event = event
+        CONFIGURATION['callback'] = callbacks
+        self.request.headers['x-github-event'] = 'push'
+        self.request.headers['content-type'] = (
+            'application/x-www-form-urlencoded')
+        self.request.args = {'payload': ['{"key": "value"}']}
 
         result = hook(self.request, 'hook_name')
 

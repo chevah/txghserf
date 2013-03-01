@@ -1,0 +1,22 @@
+0.1.7 (2013-03-01)
+==================
+
+* Fix parsing 'push' events as 'application/x-www-form-urlencoded'.
+
+
+0.1.6 (2013-03-01)
+==================
+
+* List received input in error log message.
+
+
+0.1.5 (2013-03-01)
+==================
+
+* Update list of GitHub IPs.
+
+
+0.1.4 (2013-02-28)
+==================
+
+* Initial release.

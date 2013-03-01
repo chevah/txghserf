@@ -26,6 +26,10 @@ CONFIGURATION = {
         '54.235.120.57',
         '54.235.120.61',
         '54.235.120.62',
+        '207.97.227.253',
+        '50.57.128.197',
+        '50.57.231.61',
+        '108.171.174.178',
         ],
     'callback': None,
 }
@@ -52,6 +56,14 @@ class Event(object):
         'event': self.name,
         'content': self.content,
         }
+
+
+class ServerException(Exception):
+    """
+    Generic server exception.
+    """
+    def __init__(self, message):
+        self.message = message
 
 
 @route('/ping',  methods=['GET'])
@@ -82,29 +94,59 @@ def hook(request, hook_name):
             ' "%(ip)s".' % {'name': hook_name, 'ip': request.getClientIP()})
         return "Error:001: Where are you comming from?"
 
-    event_name = request.getHeader('X-Github-Event')
-    if not event_name:
-        log.msg(
-            'Received hook "%(name)s" for unknown event "%(event_name)s"' % {
-                'name': hook_name, 'event_name': event_name})
-        return "Error:002: What kind of event is this?"
-
-    event = None
+    content = None
+    event_name = None
     try:
-        content = request.content.read()
-        event = Event(
-            hook=hook_name,
-            name=event_name,
-            content=json.loads(content),
-            )
+        event_name, content = parse_request(request)
+    except ServerException, error:
+        log.msg('Failed to get json for hook "%(name)s". %(details)s' % {
+                'name': hook_name, 'details': error.message})
+        return "Error:002: Failed to get hook content."
     except:
         import traceback
-        log.msg('Failed to parse "%(event_name)s":\n%(details)s' % {
-            'event_name': event_name, 'details': traceback.format_exc()})
+        log.msg(
+            'Failed to process "%(event_name)s":\n%(content)s\n%(details)s' % {
+            'event_name': event_name,
+            'content': content,
+            'details': traceback.format_exc(),
+            })
         return "Error:003: Internal error"
+
+    event = Event(
+        hook=hook_name,
+        name=event_name,
+        content=content,
+        )
 
     callback = CONFIGURATION['callback']
     if callback:
         callback(event)
     else:
         log.msg("Received new event for %s" % event)
+
+
+def parse_request(request):
+    """
+    Return the event name nad JSON from request.
+    """
+
+    SUPPORTED_CONTENT_TYPES = [
+        'application/x-www-form-urlencoded',
+        'application/json',
+        ]
+
+    event_name = request.getHeader('X-Github-Event')
+    if not event_name:
+        raise ServerException('Unknown event.')
+
+    content_type = request.getHeader('Content-Type')
+    if not content_type or content_type not in SUPPORTED_CONTENT_TYPES:
+        raise ServerException('Unsuported content type.')
+
+    if event_name == 'push':
+        json_serialization = request.args['payload'][0]
+    else:
+        json_serialization = request.content.read()
+
+    json_dict = json.loads(json_serialization)
+    return (event_name, json_dict)

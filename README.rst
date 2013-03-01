@@ -14,3 +14,18 @@ It will parse incomming hooks and covert the JSON into objects.
 
 It is planed to also include a simple web tool to register hooks or check
 hook status.
+
+Development
+-----------
+
+Get virtual environment and install dependencies::
+
+    make deps
+
+Run the tests::
+
+    make test
+
+Run the server::
+
+    make run

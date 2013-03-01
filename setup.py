@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-VERSION = '0.1.3'
+VERSION = '0.1.7'
 
 distribution = setup(
     name="txghserf",
@@ -11,7 +11,7 @@ distribution = setup(
     platforms='any',
     description="Simple server to listen for GitHub repo hooks.",
     long_description=open('README.rst').read(),
-    url='http://www.chevah.com',
+    url='https://github.com/chevah/txghserf',
     packages=find_packages('.'),
     package_data={
         'txghserf': [
@@ -20,6 +20,10 @@ distribution = setup(
             'static/css/*.css',
             ]
         },
+    install_requires=[
+        'klein',
+        'twisted',
+        ],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
