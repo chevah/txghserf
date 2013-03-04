@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-VERSION = '0.2.0'
+VERSION = '0.2.1'
 
 distribution = setup(
     name="txghserf",
@@ -16,6 +16,7 @@ distribution = setup(
     package_data={
         'txghserf': [
             'static/*.html',
+            'static/lib/*',
             'static/js/*.js',
             'static/css/*.css',
             ]

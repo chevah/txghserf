@@ -1,2 +1,2 @@
 include README.rst setup.py
-graft txghserf
+recursive-exclude txghserf *.pyc
