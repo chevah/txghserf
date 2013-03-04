@@ -1,3 +1,15 @@
+0.2.3 (2013-03-04)
+==================
+
+* Add Credentials to XMLHttpRequest.
+
+
+0.2.2 (2013-03-04)
+==================
+
+* Fix Python package definition to include partials HTML files.
+
+
 0.2.1 (2013-03-04)
 ==================
 

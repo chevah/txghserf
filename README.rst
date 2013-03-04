@@ -28,6 +28,12 @@ Login using GitHub credentials::
 
     http://host:port/
 
+..  warning::
+    The JS gui will work fine from localhost, since GitHub API accept all
+    localhost origins.
+    To allow the JS gui to connect to GitHub from a public server, you will
+    need to register the server address as on GitHub OAuth application.
+
 
 Development
 -----------

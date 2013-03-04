@@ -31,7 +31,8 @@ var app = angular.module('githubhooks', ['ui.bootstrap']).
 
 function GitHubService($http, $location){
   var exports = {}
-  var API_URL = 'https://api.github.com';
+
+  exports.API_URL = 'https://api.github.com';
 
   var parseRelativeLinks = function(raw_links){
     var result= {}
@@ -59,22 +60,14 @@ function GitHubService($http, $location){
           this.username + ':' + this.password)
       }
 
-      this.getUser = function() {
-        return $http({
-          method: 'GET',
-          url: API_URL + '/user',
-          cache: true,
-          headers: this.headers
-          })
-      }
-
       this.get = function(url) {
         var self = this
         return $http({
           method: 'GET',
           url: url,
           cache: true,
-          params: {per_page: 1000},
+          params: {per_page: 100},
+          withCredentials: true,
           headers: self.headers
           })
       }
@@ -84,6 +77,7 @@ function GitHubService($http, $location){
           method: 'POST',
           data: data,
           url: url,
+          withCredentials: true,
           headers: this.headers
           })
       }
@@ -92,6 +86,7 @@ function GitHubService($http, $location){
         return $http({
           method: 'DELETE',
           url: url,
+          withCredentials: true,
           headers: this.headers
           })
       }
@@ -101,6 +96,7 @@ function GitHubService($http, $location){
           method: 'PATCH',
           url: url,
           data: data,
+          withCredentials: true,
           headers: this.headers
           })
       }
@@ -191,7 +187,7 @@ function LoginCtrl($scope, $rootScope, github) {
     })
     $scope.$parent.github = hub
 
-    hub.getUser().
+    hub.get(github.API_URL + '/user').
       success(function(data, status) {
         $scope.$parent.alert.info = ''
         $scope.$parent.alert.error = ''
