@@ -1,0 +1,87 @@
+<div class="modal-header">
+  <h1>{{title}}</h1>
+</div>
+
+<div class="modal-body">
+  <form class="form-horizontal" ng-submit="doSubmit()">
+
+    <div class="control-group">
+      <label class="control-label" for="url">URL</label>
+      <div class="controls">
+        <input
+          type="text"
+          id="url"
+          placeholder="hook_url"
+          ng-model="hook.config.url"
+          required
+          />
+      </div>
+      <div class="controls">
+        <small>{{base_url}}/<strong>HOOK_NAME</strong></small>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        <input type="checkbox" ng-model="hook.config.insecure_ssl"/>
+        Insecure SSL
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="events">Events</label>
+      <div class="controls">
+        <input
+          type="text"
+          id="events"
+          placeholder="push, pull_request"
+          ng-model="hook.events"
+          required
+          />
+      </div>
+      <div class="controls">
+        <small>
+          Available actions:
+              push
+              issues
+              issue_comment
+              commit_comment
+              pull_request
+              pull_request_review_comment
+              gollum
+              watch
+              download
+              fork
+              fork_apply
+              member
+              public
+              team_add
+              status
+        </small>
+      </div>
+
+    </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <input type="checkbox" ng-model="hook.active"> Active
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button
+      class="btn"
+      ng-click="close()"
+      >
+      Close
+    </button>
+    <button
+      class="btn btn-primary"
+      type="submit"
+      >
+      {{action_name}}
+    </button>
+  </div>
+
+  </form>
+</div>

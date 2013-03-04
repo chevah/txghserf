@@ -10,12 +10,16 @@ Implement your on "run.py" and start it like::
 
 It will parse incoming hooks and covert the JSON into objects.
 
-Configure GitHub Hooks using http://host:port/hook/SOME_NAME.
+Configure GitHub Hooks using::
+
+    http://host:port/hook/SOME-NAME
 
 SOME_NAME is just to track the source of the hook.
 
-It is planed to also include a simple web tool to register hooks or check
-hook status.
+It also include a simple web tool to register hooks or check hook status::
+
+    http://host:port/
+
 
 Development
 -----------
@@ -31,3 +35,21 @@ Run the tests::
 Run the server::
 
     make run
+
+
+TODO
+----
+
+* Add proper pagination for GitHub API... not it just request 1000 entries.
+* Add configuration and checking of secret
+
+
+Thanks
+------
+
+This project is standing on the shoulders of giants:
+
+* Twisted Matrix
+* Klein
+* AngularJS
+* AngujarJS-UI Bootstrap

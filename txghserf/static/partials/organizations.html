@@ -1,0 +1,18 @@
+<ul class="breadcrumb">
+  <li class="active">Organizations</li>
+</ul>
+
+<div class="well">
+  <ul class="nav nav-list">
+    <li class="nav-header">
+      Organizations for {{account.name}} ({{account.login}})
+    </li>
+
+    <li ng-repeat="organization in account.organizations">
+      <a href="" ng-click="goToOrganization(organization)">
+        {{organization.login}}
+      </a>
+    </li>
+
+  </ul>
+</div>

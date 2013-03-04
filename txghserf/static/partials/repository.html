@@ -1,0 +1,104 @@
+<ul class="breadcrumb">
+  <li>
+    <a href="" ng-click="goToOrganizations()">
+      Organizations
+    </a>
+    <span class="divider">/</span>
+  </li>
+  <li>
+    <a href="" ng-click="goToOrganization(organization)">
+      {{organization.login}}
+    </a>
+    <span class="divider">/</span>
+  </li>
+  <li class="active">{{repository.name}}</li>
+</ul>
+
+
+<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+  {{alert.msg}}
+</alert>
+
+
+<table class="table table-striped table-bordered">
+  <caption class="well">
+    <strong>
+      Hooks for {{organization.login}}/{{repository.name}}
+      ({{account.login}})
+    </strong>
+  </caption>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Events</th>
+      <th>
+        
+        <button
+          class="btn btn-success"
+          ng-click="onAdd()"
+          >
+          Add web hook
+        </button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="hook in repository.hooks">
+      <td>
+        {{getName(hook)}}
+        <span
+          class="badge badge-warning"
+          ng-show="hook.name === 'web' && hook.config.insecure_ssl == '1' ">
+          insecure
+        </span>
+      </td>
+      <td>
+        <span class="label"
+          ng-class="{
+            'label-success': hook.active,
+            'label-important': !hook.active
+          }"
+          >
+          {{getStatus(hook)}}
+        </span>
+      </td>
+      <td>
+        <span ng-repeat="event in hook.events"
+          class="badge badge-info"
+          >
+          {{event}}
+        </span>
+      </td>
+      <td>
+        <button
+          class="btn btn-mini btn-primary"
+          ng-show="canEdit(hook)"
+          ng-click="onEdit(hook)"
+          >
+          Edit
+        </button>
+        <button
+          class="btn btn-mini"
+          ng-click="onTest(hook)"
+          >
+          Test
+        </button>
+        <button
+          class="btn btn-mini"
+          ng-click="onView(hook)"
+          >
+          View
+        </button>
+        <button
+          class="btn btn-mini btn-danger"
+          ng-click="onDelete(hook)"
+          >
+          Delete
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+

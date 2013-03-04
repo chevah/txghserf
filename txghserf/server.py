@@ -66,17 +66,28 @@ class ServerException(Exception):
         self.message = message
 
 
+@route('/')
+def root(request):
+    """
+    Entry point.
+    """
+    return File(STATIC_PATH)
+
+
+@route('/static', branch=True)
+def static(request):
+    """
+    All files from static.
+    """
+    return File(STATIC_PATH)
+
+
 @route('/ping',  methods=['GET'])
 def ping(request):
     """
     Simple resource to check that server is up.
     """
     return 'pong'
-
-
-@route('/admin/')
-def admin(request):
-    return File(STATIC_PATH)
 
 
 @route('/hook/<string:hook_name>',  methods=['POST'])

@@ -1,0 +1,22 @@
+<ul class="breadcrumb">
+  <li>
+    <a href="" ng-click="goToOrganizations()">
+      Organizations
+    </a>
+    <span class="divider">/</span>
+  </li>
+  <li class="active">{{organization.login}}</li>
+</ul>
+
+<div class="well">
+  <ul class="nav nav-list">
+    <li class="nav-header">
+      Repos for {{organization.login}} ({{account.login}})
+    </li>
+    <li ng-repeat="repo in organization.repositories">
+      <a href="" ng-click="goToRepository(organization, repo)">
+        {{repo.name}}
+      </a>
+    </li>
+  </ul>
+</div>
