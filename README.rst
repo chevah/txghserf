@@ -54,6 +54,7 @@ Run the server::
 TODO
 ----
 
+* Add ssl security check instead of IP filter.
 * Add proper pagination for GitHub API... not it just request 1000 entries.
 * Add configuration and checking of secret
 
@@ -67,3 +68,4 @@ This project is standing on the shoulders of giants:
 * Klein
 * AngularJS
 * AngujarJS-UI Bootstrap
+* Brandon Sterne for cidr.py
