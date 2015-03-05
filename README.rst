@@ -1,10 +1,5 @@
-Twisted GitHub Service Hooks Server
-===================================
-
-
-A picture is worth a thousand words:
-
-.. figure:: http://adi.roiban.ro/media/img/articles/2013/txghserf.jpg
+GitHub Service Hooks Server based on Twisted
+============================================
 
 This is just a boilerplate for implementing a GitHub Service Hooks server
 based on Klein and Twisted.
@@ -23,16 +18,15 @@ Configure GitHub Hooks using::
 HOOK-NAME is just a random string to track the source of the hook or
 implement multiple hooks on the same server.
 
+
+Hooks registration (obsolete)
+-----------------------------
+
 It also include a simple web tool to register hooks or check hook status.
-Login using GitHub credentials::
 
-    http://host:port/
-
-..  warning::
-    The JS gui will work fine from localhost, since GitHub API accept all
-    localhost origins.
-    To allow the JS gui to connect to GitHub from a public server, you will
-    need to register the server address as on GitHub OAuth application.
+It was created by the time when GitHub Settings page did not provide a GUI
+for configuring HTTP hooks but now GitHub Settings page is usage and you
+should use it instead.
 
 
 Development
@@ -55,7 +49,6 @@ TODO
 ----
 
 * Add ssl security check instead of IP filter.
-* Add proper pagination for GitHub API... not it just request 1000 entries.
 * Add configuration and checking of secret
 
 
